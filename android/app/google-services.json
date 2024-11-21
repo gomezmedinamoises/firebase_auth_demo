@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1088846124296",
+    "project_id": "firebase-auth-demo-2024",
+    "storage_bucket": "firebase-auth-demo-2024.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088846124296:android:2951e7c0199963a0b788bd",
+        "android_client_info": {
+          "package_name": "com.devdream.firebaseauthdemo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPQ9fEn4J1f0M2lFk_I8LzZTPHSkXC_RY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,4 @@
-package com.example.firebase_auth_demo
+package com.devdream.firebaseauthdemo
 
 import io.flutter.embedding.android.FlutterActivity
 
