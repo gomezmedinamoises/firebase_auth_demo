@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_demo/config/router/route_names.dart';
+import 'package:firebase_auth_demo/constants/firebase_constants.dart';
+import 'package:firebase_auth_demo/repositories/auth_repository_provider.dart';
 import 'package:firebase_auth_demo/screens/auth/reset_password/reset_password_screen.dart';
 import 'package:firebase_auth_demo/screens/auth/signin/signin_screen.dart';
 import 'package:firebase_auth_demo/screens/auth/signup/signup_screen.dart';
@@ -17,8 +20,37 @@ part 'router_provider.g.dart';
 
 @riverpod
 GoRouter router(Ref ref) {
+  final authState = ref.watch(authStateStreamProvider);
   return GoRouter(
-    initialLocation: '/splash',
+    initialLocation: '/signup',
+    redirect: (context, state) {
+      if (authState is AsyncLoading<User?>) {
+        return '/splash';
+      }
+
+      if (authState is AsyncError<User?>) {
+        return '/firebaseError';
+      }
+
+      final authenticated = authState.valueOrNull != null;
+
+      final authenticating = (state.matchedLocation == '7signin') ||
+          (state.matchedLocation == '/signup') ||
+          (state.matchedLocation == '/resetPassword');
+
+      if (authenticated == false) {
+        return authenticating ? null : '/signin';
+      }
+
+      if (!firebaseAuth.currentUser!.emailVerified) {
+        return '/verifyEmail';
+      }
+
+      final verifyingEmail = state.matchedLocation == '/verifyEmail';
+      final splashing = state.matchedLocation == '/splash';
+
+      return (authenticating || verifyingEmail || splashing) ? '/home' : null;
+    },
     routes: [
       GoRoute(
         path: '/splash',
