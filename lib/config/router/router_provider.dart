@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_demo/config/router/route_names.dart';
-import 'package:firebase_auth_demo/constants/firebase_constants.dart';
 import 'package:firebase_auth_demo/repositories/auth_repository_provider.dart';
 import 'package:firebase_auth_demo/screens/auth/reset_password/reset_password_screen.dart';
 import 'package:firebase_auth_demo/screens/auth/signin/signin_screen.dart';
@@ -22,7 +21,7 @@ part 'router_provider.g.dart';
 GoRouter router(Ref ref) {
   final authState = ref.watch(authStateStreamProvider);
   return GoRouter(
-    initialLocation: '/signup',
+    initialLocation: '/splash',
     redirect: (context, state) {
       if (authState is AsyncLoading<User?>) {
         return '/splash';
@@ -34,17 +33,17 @@ GoRouter router(Ref ref) {
 
       final authenticated = authState.valueOrNull != null;
 
-      final authenticating = (state.matchedLocation == '7signin') ||
+      final authenticating = (state.matchedLocation == '/signin') ||
           (state.matchedLocation == '/signup') ||
           (state.matchedLocation == '/resetPassword');
 
       if (authenticated == false) {
-        return authenticating ? null : '/signin';
+        return authenticating ? null : '/signup';
       }
 
-      if (!firebaseAuth.currentUser!.emailVerified) {
+      /* if (!firebaseAuth.currentUser!.emailVerified) {
         return '/verifyEmail';
-      }
+      }*/
 
       final verifyingEmail = state.matchedLocation == '/verifyEmail';
       final splashing = state.matchedLocation == '/splash';

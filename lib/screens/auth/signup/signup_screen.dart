@@ -41,8 +41,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
     if (form == null || !form.validate()) return;
 
-    print(
-        'name: ${_nameController.text}, email: ${_emailController.text}, password: ${_passwordController.text}');
+    ref.read(signupProvider.notifier).signUp(
+          name: _nameController.text,
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
   }
 
   @override
