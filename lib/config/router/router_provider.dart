@@ -13,6 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../constants/firebase_constants.dart';
 import '../../screens/page_not_found.dart';
 
 part 'router_provider.g.dart';
@@ -38,12 +39,12 @@ GoRouter router(Ref ref) {
           (state.matchedLocation == '/resetPassword');
 
       if (authenticated == false) {
-        return authenticating ? null : '/signup';
+        return authenticating ? null : '/signin';
       }
 
-      /* if (!firebaseAuth.currentUser!.emailVerified) {
+      if (!firebaseAuth.currentUser!.emailVerified) {
         return '/verifyEmail';
-      }*/
+      }
 
       final verifyingEmail = state.matchedLocation == '/verifyEmail';
       final splashing = state.matchedLocation == '/splash';
