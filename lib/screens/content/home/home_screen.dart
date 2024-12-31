@@ -1,8 +1,12 @@
+import 'package:firebase_auth_demo/constants/firebase_constants.dart';
 import 'package:firebase_auth_demo/models/custom_error.dart';
+import 'package:firebase_auth_demo/screens/content/home/home_provider.dart';
 import 'package:firebase_auth_demo/utils/error_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../config/router/route_names.dart';
 import '../../../repositories/auth_repository_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -10,6 +14,9 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final uid = firebaseAuth.currentUser!.uid;
+    final profileState = ref.watch(profileProvider(uid));
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
@@ -28,8 +35,58 @@ class HomeScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: const Center(
-        child: Text('Home'),
+      body: profileState.when(
+        data: (appUser) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 15.0,
+              children: [
+                Text(
+                  'Welcome ${appUser.name}',
+                  style: const TextStyle(fontSize: 24.0),
+                ),
+                const Text(
+                  'Your Profile',
+                  style: TextStyle(fontSize: 24.0),
+                ),
+                Text(
+                  'email: ${appUser.email}',
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+                Text(
+                  'id: ${appUser.id}',
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+                OutlinedButton(
+                  onPressed: () {
+                    GoRouter.of(context).goNamed(RouteNames.changePassword);
+                  },
+                  child: const Text(
+                    'Change Password',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+        error: (e, _) {
+          final error = e as CustomError;
+          return Center(
+            child: Text(
+              'code: ${error.code}\nplugin: ${error.plugin}\nmessage: ${error.message}',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.red,
+                fontSize: 18,
+              ),
+            ),
+          );
+        },
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
+        ),
       ),
     );
   }
